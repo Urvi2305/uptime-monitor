@@ -32,6 +32,7 @@ function AddUrlForm({ onAdd }) {
           onChange={(event) => setUrl(event.target.value)}
           disabled={isSubmitting}
           aria-label="URL to monitor"
+          autoFocus
         />
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Adding…' : 'Add URL'}
