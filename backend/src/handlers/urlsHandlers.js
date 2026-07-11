@@ -1,6 +1,6 @@
 const pool = require('../db');
-const { sendSuccess, sendError } = require('../utils/response');
-const STATUS = require('../utils/statusCodes');
+const { sendSuccess, sendError } = require('../services/response');
+const STATUS = require('../services/statusCodes');
 
 const UNIQUE_VIOLATION = '23505';
 const MAX_URL_LENGTH = 2048;

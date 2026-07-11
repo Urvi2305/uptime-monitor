@@ -1,5 +1,5 @@
 const express = require('express');
-const asyncHandler = require('../asyncHandler');
+const asyncHandler = require('../services/asyncHandler');
 const urlsHandlers = require('../handlers/urlsHandlers');
 
 const router = express.Router();
