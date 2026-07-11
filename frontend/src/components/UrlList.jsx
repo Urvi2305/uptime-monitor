@@ -1,7 +1,7 @@
 import UrlCard from './UrlCard';
 import EmptyState from './EmptyState';
 
-function UrlList({ urls }) {
+function UrlList({ urls, onDelete }) {
   if (urls.length === 0) {
     return <EmptyState />;
   }
@@ -9,7 +9,7 @@ function UrlList({ urls }) {
   return (
     <ul className="url-list">
       {urls.map((url) => (
-        <UrlCard key={url.id} url={url} />
+        <UrlCard key={url.id} url={url} onDelete={onDelete} />
       ))}
     </ul>
   );
