@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-monitor}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-monitor}
+      POSTGRES_DB: ${POSTGRES_DB:-uptime_monitor}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-monitor} -d ${POSTGRES_DB:-uptime_monitor}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-monitor}:${POSTGRES_PASSWORD:-monitor}@postgres:5432/${POSTGRES_DB:-uptime_monitor}
+      PORT: 4000
+      FRONTEND_ORIGIN: http://localhost:${FRONTEND_PORT:-5173}
+    ports:
+      - "${BACKEND_PORT:-4000}:4000"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://localhost:${BACKEND_PORT:-4000}
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+
+volumes:
+  pgdata:
