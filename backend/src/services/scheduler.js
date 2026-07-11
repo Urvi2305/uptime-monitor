@@ -1,5 +1,5 @@
 const axios = require('axios');
-const pool = require('./db');
+const pool = require('../db');
 
 const CHECK_INTERVAL_MS = 60_000;
 const REQUEST_TIMEOUT_MS = 5000;

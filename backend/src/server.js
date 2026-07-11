@@ -3,9 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const pool = require('./db');
-const { startScheduler } = require('./scheduler');
-const { sendSuccess, sendError } = require('./utils/response');
-const STATUS = require('./utils/statusCodes');
+const { startScheduler } = require('./services/scheduler');
+const { sendSuccess, sendError } = require('./services/response');
+const STATUS = require('./services/statusCodes');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
