@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 function Modal({ onClose, children }) {
   useEffect(() => {
@@ -10,18 +11,25 @@ function Modal({ onClose, children }) {
   }, [onClose]);
 
   function handleBackdropClick(event) {
+    event.stopPropagation();
     if (event.target === event.currentTarget) onClose();
   }
 
-  return (
+  function handleCloseClick(event) {
+    event.stopPropagation();
+    onClose();
+  }
+
+  return createPortal(
     <div className="modal-backdrop" onClick={handleBackdropClick}>
       <div className="modal" role="dialog" aria-modal="true">
-        <button type="button" className="modal-close" onClick={onClose} aria-label="Close">
+        <button type="button" className="modal-close" onClick={handleCloseClick} aria-label="Close">
           ×
         </button>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

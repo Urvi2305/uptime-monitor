@@ -1,24 +1,32 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StatusBadge from './StatusBadge';
+import Modal from './Modal';
 import { formatRelativeTime } from '../utils/formatRelativeTime';
 
 function UrlCard({ url, onDelete }) {
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  async function handleDelete(event) {
+  function openConfirm(event) {
     event.stopPropagation();
+    setDeleteError(null);
+    setIsConfirmOpen(true);
+  }
+
+  async function handleConfirmDelete() {
     setIsDeleting(true);
     setDeleteError(null);
     try {
       await onDelete(url.id);
       // On success this card unmounts once the parent's list refreshes —
-      // no need to reset isDeleting here.
+      // no need to reset isDeleting/close the modal here.
     } catch (err) {
       setDeleteError(err.message);
       setIsDeleting(false);
+      setIsConfirmOpen(false);
     }
   }
 
@@ -47,7 +55,7 @@ function UrlCard({ url, onDelete }) {
         <button
           type="button"
           className="url-card-delete"
-          onClick={handleDelete}
+          onClick={openConfirm}
           onKeyDown={(event) => event.stopPropagation()}
           disabled={isDeleting}
         >
@@ -62,6 +70,40 @@ function UrlCard({ url, onDelete }) {
         <div className="url-card-error">{url.error_message}</div>
       )}
       {deleteError && <div className="url-card-error">Couldn't remove: {deleteError}</div>}
+
+      {isConfirmOpen && (
+        <Modal onClose={() => setIsConfirmOpen(false)}>
+          <h2 className="modal-title">Remove this URL?</h2>
+          <p className="confirm-dialog-text">
+            <span className="url-card-address">{url.url}</span> will stop being monitored. This
+            can't be undone.
+          </p>
+          <div className="confirm-dialog-actions">
+            <button
+              type="button"
+              className="confirm-dialog-cancel"
+              onClick={(event) => {
+                event.stopPropagation();
+                setIsConfirmOpen(false);
+              }}
+              disabled={isDeleting}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="confirm-dialog-confirm"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleConfirmDelete();
+              }}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Removing…' : 'Remove'}
+            </button>
+          </div>
+        </Modal>
+      )}
     </li>
   );
 }

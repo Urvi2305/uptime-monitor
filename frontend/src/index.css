@@ -512,6 +512,56 @@ h1 {
   outline-offset: 2px;
 }
 
+.confirm-dialog-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 var(--space-4);
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.confirm-dialog-cancel {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.confirm-dialog-cancel:hover:not(:disabled) {
+  border-color: var(--border-hover);
+}
+
+.confirm-dialog-confirm {
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--danger);
+  color: #2a0a0a;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.confirm-dialog-confirm:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.confirm-dialog-cancel:disabled,
+.confirm-dialog-confirm:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 @media (max-width: 480px) {
   .app {
     padding: var(--space-3) var(--space-2) 48px;
