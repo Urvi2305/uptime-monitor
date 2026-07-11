@@ -1,4 +1,163 @@
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
+  background: #f7f7f8;
+  color: #1a1a1a;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.status-message {
+  color: #555;
+}
+
+.error-banner {
+  background: #fff4e5;
+  border: 1px solid #f0b429;
+  color: #7a5200;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  padding: 32px;
+  text-align: center;
+  color: #666;
+}
+
+.url-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.url-card {
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 6px;
+  padding: 12px 16px;
+}
+
+.url-card-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.url-card-address {
+  font-weight: 500;
+  word-break: break-all;
+  flex: 1;
+}
+
+.url-card-delete {
+  background: none;
+  border: 1px solid #d33;
+  color: #d33;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.url-card-delete:hover:not(:disabled) {
+  background: #fdeaea;
+}
+
+.url-card-delete:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.url-card-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.url-card-error {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #b3261e;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.badge-up {
+  background: #e3f6e8;
+  color: #1e7a34;
+}
+
+.badge-down {
+  background: #fdeaea;
+  color: #b3261e;
+}
+
+.badge-pending {
+  background: #eee;
+  color: #666;
+}
+
+.add-url-form {
+  margin-bottom: 20px;
+}
+
+.add-url-row {
+  display: flex;
+  gap: 8px;
+}
+
+.add-url-row input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.add-url-row button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.add-url-row button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.form-error {
+  color: #b3261e;
+  font-size: 0.85rem;
+  margin-top: 6px;
 }
