@@ -3,6 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const pool = require('./db');
+const { startScheduler } = require('./scheduler');
+const { sendSuccess, sendError } = require('./utils/response');
+const STATUS = require('./utils/statusCodes');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -18,12 +21,24 @@ app.use(express.json());
 app.get('/health', async (req, res) => {
   try {
     await pool.query('SELECT 1');
-    res.json({ status: 'ok' });
+    sendSuccess(res, { statusCode: STATUS.OK, message: 'Database reachable', data: null });
   } catch (err) {
-    res.status(503).json({ status: 'db unavailable' });
+    sendError(res, { statusCode: STATUS.SERVICE_UNAVAILABLE, message: 'Database unavailable' });
   }
+});
+
+app.use('/api/urls', require('./routes/urls'));
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  sendError(res, {
+    statusCode: STATUS.INTERNAL_SERVER_ERROR,
+    message: 'Internal server error',
+    error: { detail: err.message },
+  });
 });
 
 app.listen(PORT, () => {
   console.log(`Backend listening on port ${PORT}`);
+  startScheduler();
 });
