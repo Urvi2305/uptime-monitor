@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getUrls } from '../api/urls';
+import { getUrlChecks } from '../api/urls';
 
-const POLL_INTERVAL_MS = 10_000;
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
-export function useUrls() {
+export function useUrlChecks(urlId) {
   const [page, setPage] = useState(1);
-  const [urls, setUrls] = useState([]);
+  const [checks, setChecks] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: PAGE_SIZE,
@@ -18,10 +17,10 @@ export function useUrls() {
   const [error, setError] = useState(null);
   const hasLoadedOnce = useRef(false);
 
-  const fetchUrls = useCallback(async () => {
+  const fetchChecks = useCallback(async () => {
     try {
-      const result = await getUrls({ page, limit: PAGE_SIZE });
-      setUrls(result.items);
+      const result = await getUrlChecks(urlId, { page, limit: PAGE_SIZE });
+      setChecks(result.items);
       setPagination(result.pagination);
       setError(null);
     } catch (err) {
@@ -33,25 +32,23 @@ export function useUrls() {
       }
       setIsPageLoading(false);
     }
-  }, [page]);
+  }, [urlId, page]);
 
   useEffect(() => {
     if (hasLoadedOnce.current) {
       setIsPageLoading(true);
     }
-    fetchUrls();
-    const intervalId = setInterval(fetchUrls, POLL_INTERVAL_MS);
-    return () => clearInterval(intervalId);
-  }, [fetchUrls]);
+    fetchChecks();
+  }, [fetchChecks]);
 
   return {
-    urls,
+    checks,
     pagination,
     page,
     setPage,
     isLoading,
     isPageLoading,
     error,
-    refresh: fetchUrls,
+    refresh: fetchChecks,
   };
 }

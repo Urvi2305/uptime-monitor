@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post('/', asyncHandler(urlsHandlers.createUrl));
 router.get('/', asyncHandler(urlsHandlers.listUrls));
+router.get('/:id', asyncHandler(urlsHandlers.getUrlById));
 router.get('/:id/checks', asyncHandler(urlsHandlers.getUrlChecks));
 router.delete('/:id', asyncHandler(urlsHandlers.deleteUrl));
 

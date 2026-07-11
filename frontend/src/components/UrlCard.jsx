@@ -1,15 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import StatusBadge from './StatusBadge';
-import CheckHistoryList from './CheckHistoryList';
 import { formatRelativeTime } from '../utils/formatRelativeTime';
 
 function UrlCard({ url, onDelete }) {
+  const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [hasBeenExpanded, setHasBeenExpanded] = useState(false);
 
-  async function handleDelete() {
+  async function handleDelete(event) {
+    event.stopPropagation();
     setIsDeleting(true);
     setDeleteError(null);
     try {
@@ -22,28 +22,33 @@ function UrlCard({ url, onDelete }) {
     }
   }
 
-  function handleToggleHistory() {
-    setIsExpanded((prev) => !prev);
-    setHasBeenExpanded(true);
+  function goToHistory() {
+    navigate(`/urls/${url.id}`);
+  }
+
+  function handleKeyDown(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      goToHistory();
+    }
   }
 
   return (
-    <li className="url-card">
+    <li
+      className="url-card"
+      onClick={goToHistory}
+      onKeyDown={handleKeyDown}
+      role="link"
+      tabIndex={0}
+    >
       <div className="url-card-main">
         <StatusBadge isUp={url.is_up} />
         <span className="url-card-address">{url.url}</span>
         <button
           type="button"
-          className="url-card-history-toggle"
-          onClick={handleToggleHistory}
-          aria-expanded={isExpanded}
-        >
-          {isExpanded ? '▾ History' : '▸ History'}
-        </button>
-        <button
-          type="button"
           className="url-card-delete"
           onClick={handleDelete}
+          onKeyDown={(event) => event.stopPropagation()}
           disabled={isDeleting}
         >
           {isDeleting ? 'Removing…' : 'Remove'}
@@ -57,12 +62,6 @@ function UrlCard({ url, onDelete }) {
         <div className="url-card-error">{url.error_message}</div>
       )}
       {deleteError && <div className="url-card-error">Couldn't remove: {deleteError}</div>}
-
-      {hasBeenExpanded && (
-        <div className={isExpanded ? 'url-card-history' : 'url-card-history is-hidden'}>
-          <CheckHistoryList urlId={url.id} />
-        </div>
-      )}
     </li>
   );
 }
