@@ -1,22 +1,13 @@
 import { useState } from 'react';
 import StatusBadge from './StatusBadge';
-
-function formatRelativeTime(isoString) {
-  if (!isoString) return 'never checked';
-
-  const seconds = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000);
-  if (seconds < 60) return `${seconds}s ago`;
-
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-
-  const hours = Math.floor(minutes / 60);
-  return `${hours}h ago`;
-}
+import CheckHistoryList from './CheckHistoryList';
+import { formatRelativeTime } from '../utils/formatRelativeTime';
 
 function UrlCard({ url, onDelete }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [hasBeenExpanded, setHasBeenExpanded] = useState(false);
 
   async function handleDelete() {
     setIsDeleting(true);
@@ -31,11 +22,24 @@ function UrlCard({ url, onDelete }) {
     }
   }
 
+  function handleToggleHistory() {
+    setIsExpanded((prev) => !prev);
+    setHasBeenExpanded(true);
+  }
+
   return (
     <li className="url-card">
       <div className="url-card-main">
         <StatusBadge isUp={url.is_up} />
         <span className="url-card-address">{url.url}</span>
+        <button
+          type="button"
+          className="url-card-history-toggle"
+          onClick={handleToggleHistory}
+          aria-expanded={isExpanded}
+        >
+          {isExpanded ? '▾ History' : '▸ History'}
+        </button>
         <button
           type="button"
           className="url-card-delete"
@@ -53,6 +57,12 @@ function UrlCard({ url, onDelete }) {
         <div className="url-card-error">{url.error_message}</div>
       )}
       {deleteError && <div className="url-card-error">Couldn't remove: {deleteError}</div>}
+
+      {hasBeenExpanded && (
+        <div className={isExpanded ? 'url-card-history' : 'url-card-history is-hidden'}>
+          <CheckHistoryList urlId={url.id} />
+        </div>
+      )}
     </li>
   );
 }

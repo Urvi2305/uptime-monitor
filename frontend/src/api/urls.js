@@ -50,3 +50,7 @@ export function createUrl(url) {
 export function deleteUrl(id) {
   return request(`/api/urls/${id}`, { method: 'DELETE' });
 }
+
+export function getUrlChecks(id) {
+  return request(`/api/urls/${id}/checks`);
+}
